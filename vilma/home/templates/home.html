@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<h1>Home</h1>
+
+<!-- Dropdown search bar -->
+<div class="dropdown-menu d-block position-static pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px" data-bs-theme="light">
+
+<form id="search-form" class="p-2 mb-2 bg-body-tertiary border-bottom">
+    <input type="text" id="search-input" name="q" class="form-control" value="{{ query }}" autocomplete="on" placeholder="Procure aqui...">
+    <ul id="search-suggestions" class="list-unstyled mb-0" aria-labelledby="search-input">
+        <!-- Suggestions will be dynamically added here -->
+    </ul>
+</form>
+
+    <!-- Quick menu -->
+<div class="mb-4 text-center">
+    <h5 class="mb-3">Menu Rápido</h5>
+    <ul class="list-unstyled">
+        <li><a href="{% url 'lista_de_vendas' %}" class="text-decoration-none">Lista de Vendas</a></li>
+        <li><a href="{% url 'product_list' %}" class="text-decoration-none">Lista de Produtos</a></li>
+        <li><a href="{% url 'ingredient_list' %}" class="text-decoration-none">Lista de Ingredientes</a></li>
+        <!-- Add more links as needed -->
+    </ul>
+
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script>
+    jQuery(document).ready(function($) {
+        $('#search-input').on('input', function() {
+            var query = $(this).val();  // Get the user input from the search bar
+            $.ajax({
+                url: '{% url 'search_suggestions' %}',
+                method: 'GET',
+                data: { q: query },  // Send the user input as the query parameter
+                success: function(data) {
+                    var suggestions = data.suggestions;
+                    var dropdownMenu = $('#search-suggestions');
+                    dropdownMenu.empty();
+                    $.each(suggestions, function(index, suggestion) {
+                        dropdownMenu.append('<li><a class="dropdown-item" href="#">' + suggestion + '</a></li>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching search suggestions:', error);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+<!-- inventory/ingredient_list.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Ingredientes{% endblock %}
+
+{% block content %}
+  <h1>Lista de Ingredientes</h1>
+  <a href="{% url 'create_ingredient' %}">
+    <button class="btn btn-secondary">Criar Ingrediente</button>
+  </a>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Nome</th>
+        <th scope="col">Quantidade Total</th>
+        <th scope="col">Custo Médio</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ingredient in ingredients %}
+        <tr>
+          <td>{{ ingredient.nome }}</td>
+          <td>{{ ingredient.total_quantity }}</td>
+          <td>{{ ingredient.avg_cost|floatformat:"2" }} euros</td> <!-- Assuming avg_cost represents cost in currency -->
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+

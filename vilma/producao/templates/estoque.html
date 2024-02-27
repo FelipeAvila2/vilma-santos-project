@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Estoque{% endblock %}
+
+{% block content %}
+  <h2>Lista de Estoque</h2>
+
+    <a href="{% url 'cozinhar' %}" class="btn btn-primary">Cozinhar</a>
+
+ <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Produto</th>
+        <th scope="col">Quantidade</th>
+        <th scope="col">Data de Validade</th>
+    </thead>
+   <tbody>
+    {% for item in estoque_items %}
+    <tr>
+      <td>{{ item.produto }}</td>
+      <td>{{ item.quantidade }}</td>
+      <td>{{ item.data_de_validade }}</td>
+    </tr>
+    {% endfor %}
+   </tbody>
+  </table>
+
+
+
+{% endblock %}

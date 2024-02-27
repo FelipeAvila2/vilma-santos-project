@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Vendas{% endblock %}
+
+{% block content %}
+  <h1>Vendas</h1>
+
+  <div class="btn-group mr-2" role="group">
+  <a href="{% url 'nova_venda' %}">
+    <button class="btn btn-secondary" type="button">Nova Venda</button>
+  </a>
+
+    <form action="{% url 'download_csv_report' %}" method="post">
+        {% csrf_token %}
+        <button class="btn btn-secondary" type="submit">Download CSV</button>
+    </form>
+
+  </div>
+
+  <div>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Cliente</th>
+        <th>Quantidade</th>
+        <th><a href="?sort=date">Data de Venda</a></th>
+        <th>Preço</th>
+        <th>Custo</th>
+        <th>Lucro Operacional</th>
+        <th></th> <!-- Add a header for the delete button column -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for venda in vendas %}
+        <tr>
+          <td>{{ venda.estoque }}</td>
+          <td>{{ venda.cliente }}</td>
+          <td>{{ venda.quantidade }}</td>
+          <td>{{ venda.data_de_venda }}</td>
+          <td>{{ venda.preco }}</td>
+          <td>{{ venda.estoque.produto.calcular_custo }}</td>
+          <td>{{ venda.lucro_operacional }}</td>
+          <td><a href="{% url 'delete_venda' venda.pk %}">Delete</a></td> <!-- Add a delete button -->
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  </div>
+
+  <h2>Resultados Anuais</h2>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Mes</th>
+        <th>Lucro Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for month, profit in total_profit_by_month.items %}
+        <tr>
+          <td>{{ month }}</td>
+          <td>{{ profit }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

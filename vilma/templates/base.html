@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Adjusting height of page content wrapper */
+        #page-content-wrapper {
+            min-height: 100vh;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="d-flex" id="wrapper">
+
+  <!-- Sidebar -->
+  <div class="d-flex flex-column flex-shrink-0 p-3 text-dark" style="width: 280px; background-color: #343a40;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+      <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+      <span class="fs-4">Vilma</span>
+    </a>
+    <hr style="background-color: #6c757d;">
+    <ul class="nav nav-pills flex-column mb-auto">
+      <!-- Vendas Category -->
+      <li class="nav-item">
+        <a href="#vendasSubMenu" data-toggle="collapse" class="nav-link text-white">
+          Vendas
+        </a>
+        <ul id="vendasSubMenu" class="submenu collapse">
+          <!-- Vendas Submenu Items -->
+          <li class="submenu-item"><a class="text-white" href="{% url 'lista_de_clientes' %}">Clientes</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'novo_cliente' %}">Novo Cliente</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'lista_de_vendas' %}">Vendas</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'nova_venda' %}">Nova Venda</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'orcamento' %}">Novo Orcamento</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'lista_de_orcamentos' %}">Lista de Orcamentos</a></li>
+        </ul>
+      </li>
+      <!-- Producao Category -->
+      <li class="nav-item">
+        <a href="#producaoSubMenu" data-toggle="collapse" class="nav-link text-white">
+          Produção
+        </a>
+        <ul id="producaoSubMenu" class="submenu collapse">
+          <!-- Producao Submenu Items -->
+          <li class="submenu-item"><a class="text-white" href="{% url 'estoque' %}">Estoque</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'cozinhar' %}">Cozinhar</a></li>
+        </ul>
+      </li>
+      <!-- Inventorio Category -->
+      <li class="nav-item">
+        <a href="#inventorioSubMenu" data-toggle="collapse" class="nav-link text-white">
+          Inventário
+        </a>
+        <ul id="inventorioSubMenu" class="submenu collapse">
+          <!-- Inventorio Submenu Items -->
+          <li class="submenu-item"><a class="text-white" href="{% url 'product_list' %}">Produtos</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'ingredient_list' %}">Ingredientes</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'purchaseorder_list' %}">Ordens de Compra</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'supplier_list' %}">Fornecedores</a></li>
+          <li class="submenu-item"><a class="text-white" href="{% url 'transaction_list' %}">Transações</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    {% if user.is_authenticated %}
+
+<div class="container">
+    <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">logout</button>
+    </form>
+</div>
+
+{% else %}
+
+<ul>
+    <li><a href="{% url 'login' %}"> Login </a></li>
+</ul>
+
+{% endif %}
+
+  </div>
+  <!-- /#sidebar-wrapper -->
+
+  <!-- Page Content -->
+  <div id="page-content-wrapper" class="bg-light" style="min-width: calc(100% - 280px);">
+    <div class="container-fluid">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+  <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3">
+  <a class="text-white" href="https://github.com/FelipeAvila2"> Criado por Felipe Avila</a> | <a class="text-white" href="https://www.djangoproject.com/">Desenvolvido com Python Django</a>
+</footer>
+<!-- /Footer -->
+
+<!-- Bootstrap JS and jQuery (Optional, for dropdown functionality) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Toggle Menu Script -->
+<script>
+  $("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+  });
+</script>
+
+</body>
+</html>

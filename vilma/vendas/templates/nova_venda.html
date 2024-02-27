@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Nova Venda{% endblock %}
+
+{% block content %}
+  <h1>Nova Venda</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div>
+      <label for="id_preco">Preço:</label>
+      <input type="text" id="id_preco" name="preco" value="{{ form.initial.preco }}" readonly>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+{% endblock %}
+

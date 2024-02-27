@@ -1,0 +1,14 @@
+<!-- inventory/create_supplier.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Criar Fornecedor{% endblock %}
+
+{% block content %}
+  <h1>Cria Fornecedorr</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar Fornecedor</button>
+  </form>
+{% endblock %}

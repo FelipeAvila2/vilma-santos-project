@@ -1,0 +1,14 @@
+<!-- inventory/create_ingredient.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Criar Ingrediente{% endblock %}
+
+{% block content %}
+  <h1>Criar Ingrediente</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar Ingrediente</button>
+  </form>
+{% endblock %}

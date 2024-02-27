@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Novo Orcamento{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Criar Novo Orcamento</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ item_formset.management_form }}
+        <div id="items-formset">
+            {% for form in item_formset %}
+                <div class="item-form">
+                    <p>
+                        <label for="{{ form.produto.id_for_label }}">Produto:</label>
+                        {{ form.produto }}
+                    </p>
+                    <p>
+                        <label for="{{ form.quantidade.id_for_label }}">Quantidade:</label>
+                        {{ form.quantidade }}
+                    </p>
+                    <p>
+                        <label for="{{ form.desconto.id_for_label }}">Desconto:</label>
+                        {{ form.desconto }}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-item">Novo Item</button>
+        <button type="submit">OK</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.getElementById('add-item');
+    const formset = document.getElementById('items-formset');
+    let totalForms = document.getElementById('id_form-TOTAL_FORMS');
+    let formIndex = parseInt(totalForms.value);
+
+    addButton.addEventListener('click', function() {
+        const newForm = formset.children[0].cloneNode(true);
+
+        // Update IDs and names of the cloned form fields
+        newForm.querySelectorAll('input, select').forEach(function(field) {
+            // Update IDs
+            const oldId = field.getAttribute('id');
+            const newId = oldId.replace(/-\d+-/, '-' + formIndex + '-');
+            field.setAttribute('id', newId);
+
+            // Update names
+            const oldName = field.getAttribute('name');
+            const newName = oldName.replace(/-\d+-/, '-' + formIndex + '-');
+            field.setAttribute('name', newName);
+
+            // Clear field value
+            field.value = '';
+        });
+
+        formset.appendChild(newForm);
+        totalForms.setAttribute('value', formIndex + 1);
+        formIndex++;
+    });
+
+    formset.addEventListener('input', function() {
+        // No calculation needed, as per the new requirement
+    });
+});
+</script>
+{% endblock %}

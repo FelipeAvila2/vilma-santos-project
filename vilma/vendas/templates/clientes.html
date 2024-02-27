@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block content %}
+  <h1>Clientes</h1>
+  <a href="{% url 'novo_cliente' %}">
+    <button class="btn btn-secondary">Novo Cliente</button>
+  </a>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>Endereço</th>
+        <th>Contato</th>
+        <th>Editar</th>
+        <th>Excluir</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cliente in clientes %}
+        <tr>
+          <td>{{ cliente.nome }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.phone }}</td>
+          <td>{{ cliente.endereco }}</td>
+          <td>{{ cliente.contato }}</td>
+          <td><a href="{% url 'edit_cliente' cliente.id %}">Editar</a></td>
+          <td><a href="{% url 'delete_cliente' cliente.id %}">Excluir</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,13 @@
+<!-- delete_product.html -->
+{% extends 'base.html' %}
+
+{% block title %}Excluir Produto{% endblock %}
+
+{% block content %}
+  <h1>Excluir Produto</h1>
+  <p>Tem certeza de que deseja excluir o produto "{{ product.nome }}"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirmar Exclusão</button>
+  </form>
+{% endblock %}

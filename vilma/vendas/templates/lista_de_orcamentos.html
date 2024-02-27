@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Orcamentos{% endblock %}
+
+{% block content %}
+
+  <h1>Lista de Orcamentos</h1>
+
+  <a href="{% url 'orcamento' %}">
+    <button class="btn btn-secondary" type="button">Novo Orcamento</button>
+  </a>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Data de Criacao</th>
+        <th>Valor Total</th>
+        <th>Itens</th>
+        <th>Ações</th> <!-- New column for actions -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for orcamento in orcamentos %}
+        <tr>
+          <td>{{ orcamento.id }}</td>
+          <td>{{ orcamento.created_at }}</td>
+          <td>{{ '€'|safe }}{{ orcamento.total_cost|floatformat:2 }}</td>
+          <td>
+            <ul>
+              {% for item in orcamento.budgetproposalitem_set.all %}
+                <li>{{ item.produto.nome }} - {{ item.quantidade }} x {{ item.product_price }} - Desconto: {{ item.desconto }}% - Total: {{ '€'|safe }}{{ item.cost|floatformat:2 }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>
+             <div class="btn-group" role="group">
+            <form action="{% url 'generate_pdf' orcamento.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary">Gerar PDF</button>
+            </form>
+            <a href="{% url 'edit_orcamento' orcamento.id %}" class="btn btn-secondary">Editar</a>
+            <form action="{% url 'delete_orcamento' orcamento.id %}" method="post" style="display: inline-block;">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Tem certeza que deseja excluir este orcamento?')">Excluir</button>
+            </form>
+          </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

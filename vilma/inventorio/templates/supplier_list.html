@@ -1,0 +1,36 @@
+<!-- inventory/supplier_list.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Fornecedores{% endblock %}
+
+{% block content %}
+  <h1>Fornecedores</h1>
+  <a href="{% url 'create_supplier' %}" class="btn btn-secondary">Adicionar Fornecedor</a>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>Endereço</th>
+        <th>Contato</th>
+        <th>Editar</th>
+        <th>Excluir</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for supplier in suppliers %}
+        <tr>
+          <td>{{ supplier.nome }}</td>
+          <td>{{ supplier.email }}</td>
+          <td>{{ supplier.phone }}</td>
+          <td>{{ supplier.endereco }}</td>
+          <td>{{ supplier.contato }}</td>
+           <td><a href="{% url 'edit_supplier' supplier.id %}">Editar</a></td>
+          <td><a href="{% url 'delete_supplier' supplier.id %}">Excluir</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

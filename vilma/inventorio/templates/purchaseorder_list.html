@@ -1,0 +1,133 @@
+<!-- inventory/purchase_order_list.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Ordens de Compra{% endblock %}
+
+{% block content %}
+
+<style>
+
+  /* Add this CSS to your existing CSS file or within a <style> tag in your HTML */
+.modal {
+  display: none; /* Hide the modal by default */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4); /* Black background with transparency */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered horizontally */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%; /* Could be more or less, depending on screen size */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+</style>
+
+  <h1>Ordens de Compra</h1>
+
+  <a href="{% url 'create_purchase_order' %}">
+    <button class="btn btn-secondary">Criar Ordem de Compra</button>
+  </a>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">N da ordem</th>
+        <th scope="col">Fornecedor</th>
+        <th scope="col">Data</th>
+        <th scope="col">Custo Total</th> <!-- New column for total cost -->
+        <th scope="col">Ingredientes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in purchase_orders %}
+      <tr class="purchase-order-row" data-order-id="{{ order.id }}">
+        <td>{{ order.order_number }}</td>
+        <td>{{ order.supplier }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>{{ order.total_cost }}</td> <!-- Display total cost -->
+        <td><button class="btn btn-secondary">Expandir</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div id="ingredients-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Ingredientes</h2>
+      <ul id="ingredients-list"></ul>
+    </div>
+  </div>
+
+
+<h2>Despesas Anuais</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Mês</th>
+      <th>Despesa Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for month, expense in total_expense_by_month.items %}
+      <tr>
+        <td>{{ month }}</td>
+        <td>{{ expense }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.purchase-order-row');
+
+    rows.forEach(row => {
+      row.addEventListener('click', function() {
+        const orderId = row.dataset.orderId;
+        console.log(`/inventorio/api/orders/${orderId}/ingredients/`);
+        fetch(`/inventorio/api/orders/${orderId}/ingredients`)
+          .then(response => response.json())
+          .then(data => {
+            const ingredientsList = document.getElementById('ingredients-list');
+            ingredientsList.innerHTML = ''; // Clear previous ingredients
+            data.forEach(ingredient => {
+              const listItem = document.createElement('li');
+              listItem.textContent = `${ingredient.nome} - ${ingredient.quantity} - ${ingredient.custo}`;
+              ingredientsList.appendChild(listItem);
+            });
+            document.getElementById('ingredients-modal').style.display = 'block';
+          });
+      });
+    });
+
+    const closeBtn = document.querySelector('.close');
+    closeBtn.addEventListener('click', function() {
+      document.getElementById('ingredients-modal').style.display = 'none';
+    });
+  });
+</script>
+{% endblock %}

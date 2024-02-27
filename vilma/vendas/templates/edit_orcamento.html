@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Orcamento{% endblock %}
+
+{% block content %}
+  <h1>Editar Orcamento</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ formset.management_form }}
+    {% for form in formset %}
+      {{ form.as_p }}
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+{% endblock %}

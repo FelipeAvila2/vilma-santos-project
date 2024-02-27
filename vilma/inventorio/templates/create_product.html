@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Criar Produto{% endblock %}
+
+{% block content %}
+  <h1>Criar Produto</h1>
+  <form id="create-product-form" method="post">
+    {% csrf_token %}
+    {{ produto_form.as_p }}
+    <div id="ingredients-formset">
+      {{ ingrediente_formset.management_form }}
+      {% for form in ingrediente_formset %}
+        <div class="ingredient-form">
+          {{ form.ingrediente.label_tag }}
+          {{ form.ingrediente }}
+          {{ form.ingrediente.errors }}
+
+          {{ form.quantidade.label_tag }}
+          {{ form.quantidade }}
+          {{ form.quantidade.errors }}
+
+          <button type="button" class="delete-form-btn">Delete</button>
+        </div>
+      {% endfor %}
+    </div>
+    <button type="button" id="add-ingredient-btn">Adicionar Ingrediente</button>
+    <button type="submit">Salvar Produto</button>
+  </form>
+
+<script>
+  // JavaScript code to handle adding new ingredient forms
+  var formsetContainer = document.getElementById('ingredients-formset');
+  var formsetTotalFormsInput = document.getElementById('id_form-TOTAL_FORMS');
+
+  document.getElementById('add-ingredient-btn').addEventListener('click', function() {
+    var formCount = parseInt(formsetTotalFormsInput.value);
+    var emptyForm = formsetContainer.querySelector('.ingredient-form').cloneNode(true);
+    var newForm = emptyForm.cloneNode(true);
+
+    // Update form IDs and names to be unique
+    newForm.innerHTML = newForm.innerHTML.replace(/form-(\d+)/g, `form-${formCount}`);
+    newForm.innerHTML = newForm.innerHTML.replace(/form-(\d+)/g, `form-${formCount}`);
+
+    // Increment total forms count
+    formsetTotalFormsInput.value = formCount + 1;
+
+    // Append the new form to the formset container
+    formsetContainer.appendChild(newForm);
+  });
+
+// JavaScript code to handle deleting ingredient forms
+document.addEventListener('click', function(event) {
+  if (event.target.classList.contains('delete-form-btn')) {
+    // Remove the parent element (the div containing the form)
+    event.target.parentElement.remove();
+
+    // Update total forms count
+    var formCount = document.querySelectorAll('.ingredient-form').length;
+    formsetTotalFormsInput.value = formCount;
+
+    // Remove the quantidade field value from the deleted form
+    var deletedForm = event.target.parentElement;
+    var quantidadeInput = deletedForm.querySelector('[name$="-quantidade"]');
+    quantidadeInput.value = '0'; // or set to any default value as per your requirement
+  }
+});
+</script>
+{% endblock %}
