@@ -1,20 +1,19 @@
 @echo off
 
-rem Change directory to the virtual environment and activate it
-cd /d C:\Users\R53\vilma-santos-project\vilmavenv\Scripts\Activate
-
-rem Change directory to the git repository and pull the latest changes
+rem Change directory to the git repository
 cd /d C:\Users\R53\vilma-santos-project
+
+rem Pull the latest changes from the remote repository
 git pull
 
 rem Install requirements from requirements.txt
-pip install -r requirements.txt
+C:\Users\R53\vilma-santos-project\vilmavenv\Scripts\python.exe -m pip install -r requirements.txt
 
-rem Change directory to your Django project working directory
+rem Change directory to the Django project
 cd /d C:\Users\R53\vilma-santos-project\vilma
 
-rem Run Django migrations
-py manage.py migrate
+rem Apply database migrations
+C:\Users\R53\vilma-santos-project\vilmavenv\Scripts\python.exe manage.py migrate
 
-rem Run Django development server
-py manage.py runserver
+rem Run the Django development server
+C:\Users\R53\vilma-santos-project\vilmavenv\Scripts\python.exe manage.py runserver
