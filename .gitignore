@@ -5,6 +5,7 @@
 .DS_Store
 
 # Ignore the virtual environment directory
+venv/
 vilmavenv/
 vilmavenv_310/
 
@@ -14,4 +15,4 @@ build/
 *.egg-info/
 
 # Ignore the .env file containing sensitive information
-.env
+vilma/.env
