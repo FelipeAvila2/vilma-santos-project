@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY') # Replace with a strong secret key for production use
 
-DEBUG = False  # Set to False for production
+DEBUG = True  # Set to False for production
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Add appropriate hosts for production
 

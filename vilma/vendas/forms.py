@@ -13,7 +13,7 @@ class ClienteForm(forms.ModelForm):
 class VendaForm(forms.ModelForm):
     class Meta:
         model = Venda
-        fields = ['cliente', 'estoque', 'quantidade']
+        fields = ['cliente', 'estoque', 'quantidade', 'desconto']
 
     def __init__(self, *args, **kwargs):
         super(VendaForm, self).__init__(*args, **kwargs)

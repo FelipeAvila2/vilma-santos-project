@@ -17,22 +17,24 @@ class Cliente(models.Model):
 
 class Venda(models.Model):
     estoque = models.ForeignKey(Estoque, on_delete=models.CASCADE, null=True, blank=True)
-    cliente = models.ForeignKey('Cliente', null=True, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, null=True, on_delete=models.CASCADE)
     data_de_venda = models.DateField(null=True, auto_now_add=True)
     quantidade = models.IntegerField()
     desconto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     preco = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        print("Saving")
         if not self.pk:  # If this is a new instance
             self.preco = self.calcular_preco()  # Calculate the price before saving
         super().save(*args, **kwargs)
 
     def calcular_preco(self):
-        product_price = self.produto.price
-        total_cost = product_price * self.quantidade
+        produto_price = self.estoque.produto.preco
+        total_cost = produto_price * self.quantidade
         discounted_cost = total_cost * (1 - self.desconto)
         return discounted_cost
+
 
     def calcular_custo(self):
         total_custo = sum(
@@ -40,8 +42,13 @@ class Venda(models.Model):
         return total_custo
 
     @property
+    def total_cost(self):
+        total_cost_by_venda = self.calcular_custo() * self.quantidade
+        return total_cost_by_venda
+
+    @property
     def lucro_operacional(self):
-        return self.preco - self.calcular_custo()
+        return self.calcular_preco() - self.total_cost
 
     def __str__(self):
         return f"{self.estoque.produto.nome} - Quantidade: {self.quantidade}"

@@ -5,7 +5,7 @@
 {% block content %}
   <h2>Lista de Estoque</h2>
 
-    <a href="{% url 'cozinhar' %}" class="btn btn-primary">Cozinhar</a>
+    <a href="{% url 'cozinhar' %}" class="btn btn-secondary">Cozinhar</a>
 
  <table class="table">
     <thead>
@@ -19,7 +19,7 @@
     <tr>
       <td>{{ item.produto }}</td>
       <td>{{ item.quantidade }}</td>
-      <td>{{ item.data_de_validade }}</td>
+      <td>{{ item.data_de_validade|date:"d/m/Y" }}</td>
     </tr>
     {% endfor %}
    </tbody>

@@ -29,21 +29,21 @@
         <th>Preço</th>
         <th>Custo</th>
         <th>Lucro Operacional</th>
-        <th></th> <!-- Add a header for the delete button column -->
+        <th>Deletar</th> <!-- Add a header for the delete button column -->
       </tr>
     </thead>
     <tbody>
       {% for venda in vendas %}
-        <tr>
+      <tr>
           <td>{{ venda.estoque }}</td>
           <td>{{ venda.cliente }}</td>
           <td>{{ venda.quantidade }}</td>
-          <td>{{ venda.data_de_venda }}</td>
-          <td>{{ venda.preco }}</td>
-          <td>{{ venda.estoque.produto.calcular_custo }}</td>
-          <td>{{ venda.lucro_operacional }}</td>
+          <td>{{ venda.data_de_venda|date:"d/m/Y" }}</td>
+          <td>{{ '€'|safe }}{{ venda.preco|floatformat:2 }}</td>
+          <td>{{ '€'|safe }}{{ venda.total_cost|floatformat:2 }}</td>
+          <td>{{ '€'|safe }}{{ venda.lucro_operacional|floatformat:2 }}</td>
           <td><a href="{% url 'delete_venda' venda.pk %}">Delete</a></td> <!-- Add a delete button -->
-        </tr>
+      </tr>
       {% endfor %}
     </tbody>
   </table>

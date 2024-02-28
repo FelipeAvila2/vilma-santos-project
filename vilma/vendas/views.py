@@ -16,7 +16,26 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from django.forms import inlineformset_factory
+from collections import defaultdict
+import locale
 
+# Set the locale to Portuguese for currency formatting
+locale.setlocale(locale.LC_ALL, 'pt_PT.UTF-8')
+
+month_names = {
+    1: 'Janeiro',
+    2: 'Fevereiro',
+    3: 'Março',
+    4: 'Abril',
+    5: 'Maio',
+    6: 'Junho',
+    7: 'Julho',
+    8: 'Agosto',
+    9: 'Setembro',
+    10: 'Outubro',
+    11: 'Novembro',
+    12: 'Dezembro'
+}
 
 def edit_cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
@@ -87,32 +106,40 @@ def lista_de_vendas(request):
     now = datetime.datetime.now()
     current_month = now.month
 
-    total_profit_by_month = {}
+    total_profit_by_month = {}  # Initialize a dictionary with default value 0.0
     for month in range(1, current_month + 1):
-        month_name_str = month_name[month]
-        total_profit = Venda.objects.filter(data_de_venda__month=month).aggregate(total_profit=Sum('preco'))['total_profit'] or 0
-        total_profit_by_month[month_name_str] = total_profit
+        month_vendas = vendas.filter(data_de_venda__month=month)
+        for venda in month_vendas:
+            if month in total_profit_by_month.keys():
+                total_profit_by_month[month_names[month]] += venda.lucro_operacional
+            else:
+                total_profit_by_month[month_names[month]] = venda.lucro_operacional
 
-    return render(request, 'vendas.html', {'vendas': vendas, 'total_profit_by_month': total_profit_by_month})
+    total_profit_by_month_formatted = {
+        month: locale.currency(value, grouping=True) for month, value in total_profit_by_month.items()
+    }
+
+
+    print("Vendas ", vendas)
+    print("Total profit by month: ", total_profit_by_month_formatted )
+
+    return render(request, 'vendas.html', {'vendas': vendas, 'total_profit_by_month': total_profit_by_month_formatted})
+
 
 def nova_venda(request):
+    print("Initializing view")
     if request.method == 'POST':
+        print("method post")
         form = VendaForm(request.POST)
         if form.is_valid():
+            print("form is valid")
+            print(form.cleaned_data)
             form.save()
+            print("form saved")
             return redirect('lista_de_vendas')
     else:
+        print("initializing the form")
         form = VendaForm()
-
-        # Calculate initial price based on the selected product and quantity
-        produto_id = request.GET.get('produto_id')
-        quantidade = request.GET.get('quantidade')
-        if produto_id and quantidade:
-            # Assuming you have models and relationships properly set up
-            # Adjust this part based on your actual model structure
-            estoque = get_object_or_404(Estoque, pk=produto_id)
-            preco = estoque.produto.preco * int(quantidade)
-            form.fields['preco'].initial = preco
 
     return render(request, 'nova_venda.html', {'form': form})
 
